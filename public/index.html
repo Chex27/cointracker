@@ -11,12 +11,13 @@
 </head>
 <body>
 
-<h1>Top 10 Cryptocurrencies</h1>
+  <h1>Live Cryptocurrency Prices</h1>
 
 <!-- 🔍 SEARCH BOX -->
 <input type="text" id="search-box" placeholder="Search for a coin..." onkeyup="filterCoins()">
 
 <table id="crypto-table">
+  <button id="load-more" onclick="loadMore()">Load More</button>
   <thead>
     <tr>
       <th>Name</th>
@@ -43,7 +44,10 @@
     });
   }
 
-  fetch('/api/prices')
+  let currentPage = 1;  // Track current page
+
+function loadCoins() {
+  fetch(`/api/prices?page=${currentPage}`)
     .then(res => res.json())
     .then(data => {
       const tbody = document.querySelector('#crypto-table tbody');
@@ -57,6 +61,14 @@
         tbody.appendChild(row);
       });
     });
+}
+
+function loadMore() {
+  currentPage++;  // Go to next page
+  loadCoins();  // Fetch next set of coins
+}
+
+loadCoins();  // Load first set when the page opens
 </script>
 
 </body>
