@@ -6,50 +6,59 @@
     body { font-family: Arial; padding: 40px; }
     table { width: 100%; border-collapse: collapse; }
     th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    input { margin-bottom: 20px; padding: 8px; width: 300px; }
   </style>
 </head>
 <body>
-  <h1>Top 10 Cryptocurrencies</h1>
-  <table id="crypto-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Symbol</th>
-        <th>Price (USD)</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <script>
-    function filterCoins() {
-      let input = document.getElementById("search-box").value.toLowerCase();
-      let rows = document.querySelectorAll("#crypto-table tbody tr");
-  
-      rows.forEach(row => {
-        let name = row.children[0].innerText.toLowerCase();
-        let symbol = row.children[1].innerText.toLowerCase();
-        if (name.includes(input) || symbol.includes(input)) {
-          row.style.display = "";
-        } else {
-          row.style.display = "none";
-        }
+
+<h1>Top 10 Cryptocurrencies</h1>
+
+<!-- 🔍 SEARCH BOX -->
+<input type="text" id="search-box" placeholder="Search for a coin..." onkeyup="filterCoins()">
+
+<table id="crypto-table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Symbol</th>
+      <th>Price (USD)</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+  function filterCoins() {
+    let input = document.getElementById("search-box").value.toLowerCase();
+    let rows = document.querySelectorAll("#crypto-table tbody tr");
+
+    rows.forEach(row => {
+      let name = row.children[0].innerText.toLowerCase();
+      let symbol = row.children[1].innerText.toLowerCase();
+      if (name.includes(input) || symbol.includes(input)) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
+    });
+  }
+
+  fetch('/api/prices')
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.querySelector('#crypto-table tbody');
+      data.forEach(coin => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${coin.name}</td>
+          <td>${coin.symbol.toUpperCase()}</td>
+          <td>$${coin.current_price.toLocaleString()}</td>
+        `;
+        tbody.appendChild(row);
       });
-    }
-  </script>  
-    fetch('/api/prices')
-      .then(res => res.json())
-      .then(data => {
-        const tbody = document.querySelector('#crypto-table tbody');
-        data.forEach(coin => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${coin.name}</td>
-            <td>${coin.symbol.toUpperCase()}</td>
-            <td>$${coin.current_price.toLocaleString()}</td>
-          `;
-          tbody.appendChild(row);
-        });
-      });
-  </script>
-</body><input type="text" id="search-box" placeholder="Search for a coin..." onkeyup="filterCoins()">
+    });
+</script>
+
+</body>
 </html>
+
