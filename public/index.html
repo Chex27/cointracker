@@ -88,6 +88,22 @@ function loadCoins() {
 function loadMore() {
   currentPage++;  // Go to next page
   loadCoins();  // Fetch next set of coins
+  function loadCoins() {
+    fetch(`/api/prices?page=${currentPage}`)
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.querySelector('#crypto-table tbody');
+        data.forEach(coin => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+  <td onclick="showChart('${coin.id}', \`${coin.name}\`)">${coin.name}</td>
+  <td>${coin.symbol.toUpperCase()}</td>
+  <td>$${coin.current_price.toLocaleString()}</td>
+`;
+          tbody.appendChild(row);
+        });
+      });
+}
 }
 
 loadCoins();  // Load first set when the page opens
