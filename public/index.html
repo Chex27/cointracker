@@ -76,9 +76,10 @@ function loadCoins() {
       data.forEach(coin => {
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${coin.name}</td>
-          <td>${coin.symbol.toUpperCase()}</td>
-          <td>$${coin.current_price.toLocaleString()}</td>
+<td onclick="showChart('${coin.id}', ${coin.name}\`)">${coin.name}</td>
+  <td>${coin.symbol.toUpperCase()}</td>
+  <td>$${coin.current_price.toLocaleString()}</td>
+
         `;
         tbody.appendChild(row);
       });
@@ -96,7 +97,7 @@ function loadMore() {
         data.forEach(coin => {
   const row = document.createElement('tr');
   row.innerHTML = `
-    <td onclick="showChart('${coin.id}', \`${coin.name}\`)">${coin.name}</td>
+    <td onclick="showChart('${coin.id}', ${coin.name}\`)">${coin.name}</td>
     <td>${coin.symbol.toUpperCase()}</td>
     <td>$${coin.current_price.toLocaleString()}</td>
   `;
